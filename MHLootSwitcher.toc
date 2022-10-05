@@ -1,0 +1,13 @@
+## Interface: 20300
+## Title: MHLootSwitcher
+## Notes: Switches to master looter when you engage a Boss in MH and back to normal when you're done
+## Author: Etrne
+## SavedVariables: MHLSVars
+## Version: 0.8
+## X-Category: Chat/Communication
+## X-Credits: Rabbit's SimpleBossWhisperer
+
+MHLootSwitcher.lua
+
+
+

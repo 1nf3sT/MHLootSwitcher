@@ -1,0 +1,8 @@
+------------------------------------------------------------------------
+r70237 | sungam | 2008-04-17 15:33:27 -0400 (Thu, 17 Apr 2008) | 1 line
+Changed paths:
+   M /trunk/MHLootSwitcher/MHLootSwitcher.lua
+   M /trunk/MHLootSwitcher/MHLootSwitcher.toc
+
+MHLootSwitcher: -- Committing last version I have from before 2.4, not tested with 2.4 but should work
+------------------------------------------------------------------------
