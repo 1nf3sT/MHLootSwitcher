@@ -1,10 +1,5 @@
 local inCombat = nil
 
---[[local MHLSVars = {
-     ['defaultML'] = "Serpico",
-     ['Black Temple'] = true,
-     ['Mount Hyjal'] = true,
-}]]--
 local oldML = nil
 local defaultML = nil
 local isDebugging = nil
@@ -18,7 +13,7 @@ local function checkTarget(id)
 end
 
 local function checkZone()
-    return GetZoneText() == "Hyjal Summit" or GetZoneText() == "Black Temple"
+    return GetZoneText() == "Hyjal Summit" or GetZoneText() == "Black Temple" or GetZoneText() == "Sunwell Plateau" or GetZoneText() == "Tempest Keep" or GetZoneText() == "Serpentshrine Cavern" or GetZoneText() == "Gruul's Lair" or GetZoneText() == "Magtheridon's Lair" or GetZoneText() == "Karazhan"
     --if MHLSVars["Hyjal Summit"] == true and GetZoneText() == "Hyjal Summit" then return true
     --elseif MHLSVars["Black Temple"] == true and GetZoneText() == "Black Temple" then return true end
     
@@ -150,11 +145,17 @@ local function slashCmdHandler(arg1)
     args = strsplit(" ", arg1)
     if args[1] == "debug" then debug()
     elseif args[1] == "setML" then setML("session", args[2])
-    elseif args[1] == "setdefaultML" then setML("default", args[2])
+    elseif args[1] == "setplayerML" then setML("default", args[2])
     elseif args[1] == "getdefaultML" then DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Default Master Looter is: " .. MHLSVars["defaultML"])
     elseif args[1] == "enable" then enable()
+	elseif args[1] == "swp" then setZone("Sunwell Plateau")
     elseif args[1] == "bt" then setZone("Black Temple")
     elseif args[1] == "mh" then setZone("Hyjal Summit")
+	elseif args[1] == "tk" then setZone("Tempest Keep")
+	elseif args[1] == "ssc" then setZone("Serpentshrine Cavern")
+	elseif args[1] == "gruul" then setZone("Gruul's Lair")
+	elseif args[1] == "mag" then setZone("Magtheridon's Lair")
+	elseif args[1] == "kara" then setZone("Karazhan")
     elseif args[1] == "splitjointest" then
         local list = {}
         list = strsplit(" ", "setML etrne")
@@ -162,17 +163,24 @@ local function slashCmdHandler(arg1)
             DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: List - " .. y)
         end
     else
-        DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Parameters for /mhl are: 'debug' to enter/exit debug mode, 'setML' to set the master looter, 'enable' to enable/disable the loot changing")
+		DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Parameters for /mhl are: \ndebug: enter/exit debug mode \nsetML: set the master looter \nsetplayerML: Set yourself as Master looter\nenable: enable/disable the loot changing \nkara: enable/disable Karazhan\nmag: enable/disable Magtheridon's Lair\ngruul: enable/disable Gruul's Lair\nssc: enable/disable Serpentshrine Cavern\ntk: enable/disable Tempest Keep\nmh: enable/disable Mount Hyjal \nbt: enable/disable Black Temple\nswp: enable/disable Sunwell Plateau")
     end
     return
 end
 
 frame:SetScript("OnEvent", function()
     if event == "VARIABLES_LOADED" then
+		PlayerName = UnitName("player")
         if not MHLSVars then MHLSVars = { } end
-        if(not MHLSVars['defaultML']) then MHLSVars['defaultML'] = 'Serpico' end;
+        if(not MHLSVars['defaultML']) then MHLSVars['defaultML'] = PlayerName end;
+		if(not MHLSVars['Sunwell Plateau']) then MHLSVars['Sunwell Plateau'] = true end;
         if(not MHLSVars['Black Temple']) then MHLSVars['Black Temple'] = true end;
         if(not MHLSVars['Hyjal Summit']) then MHLSVars['Hyjal Summit'] = true end;
+		if(not MHLSVars['Tempest Keep']) then MHLSVars['Tempest Keep'] = true end;
+		if(not MHLSVars['Serpentshrine Cavern']) then MHLSVars['Serpentshrine Cavern'] = true end;
+		if(not MHLSVars['Gruul\'s Lair']) then MHLSVars['Gruul\'s Lair'] = true end;
+		if(not MHLSVars['Magtheridon\'s Lair']) then MHLSVars['Magtheridon\'s Lair'] = true end;
+		if(not MHLSVars['Karazhan']) then MHLSVars['Karazhan'] = true end;
 	elseif event == "PLAYER_REGEN_DISABLED" then
         if not isDebugging and isEnabled then
             frame:RegisterEvent("PLAYER_TARGET_CHANGED")
