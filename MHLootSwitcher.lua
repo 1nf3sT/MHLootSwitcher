@@ -1,7 +1,5 @@
 local inCombat = nil
 
-local oldML = nil
-local defaultML = nil
 local isDebugging = nil
 local isEnabled = true
 
@@ -60,18 +58,16 @@ local function lootSetter()
     if updateBossTarget() then
         if isDebugging then DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Found a boss, trying to set to ML")
         end
-        if lootmethod == "master" then return end
-        if not oldML then SetLootMethod("master",defaultML)
-        else SetLootMethod("master",oldML)  end
+        if lootmethod == "master" then return
+        else SetLootMethod("master")  end
     else
         if isDebugging then
             DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Didn't find a boss, trying to set to group loot")
         end
         local lootmethod, _, masterlooterRaidID = GetLootMethod()
         if lootmethod == "group" then return end
-        if lootmethod == "master" then oldML = GetRaidRosterInfo(masterlooterRaidID) end
         SetLootMethod("group")
-    end
+	end
 end
 
 local function debug()
@@ -93,21 +89,6 @@ local function enable()
     else
         isEnabled = true
         DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Is now enabled")
-    end
-end
-
-local function setML(type, name)
-    if name == "" or name == nil then
-        DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: You need to define a person to be master looter, /mhlsetml playername")
-    else
-        if type == "default" then
-            MHLSVars["defaultML"] = name
-            DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Default Master Looter set to " .. MHLSVars["defaultML"])
-        else
-            oldML = name
-            DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Master Looter set to " .. oldML)
-        end
-        
     end
 end
 
@@ -144,9 +125,6 @@ local function slashCmdHandler(arg1)
     local args = {}
     args = strsplit(" ", arg1)
     if args[1] == "debug" then debug()
-    elseif args[1] == "setML" then setML("session", args[2])
-    elseif args[1] == "setplayerML" then setML("default", args[2])
-    elseif args[1] == "getdefaultML" then DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Default Master Looter is: " .. MHLSVars["defaultML"])
     elseif args[1] == "enable" then enable()
 	elseif args[1] == "swp" then setZone("Sunwell Plateau")
     elseif args[1] == "bt" then setZone("Black Temple")
@@ -163,7 +141,7 @@ local function slashCmdHandler(arg1)
             DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: List - " .. y)
         end
     else
-		DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Parameters for /mhl are: \ndebug: enter/exit debug mode \nsetML: set the master looter \nsetplayerML: Set yourself as Master looter\nenable: enable/disable the loot changing \nkara: enable/disable Karazhan\nmag: enable/disable Magtheridon's Lair\ngruul: enable/disable Gruul's Lair\nssc: enable/disable Serpentshrine Cavern\ntk: enable/disable Tempest Keep\nmh: enable/disable Mount Hyjal \nbt: enable/disable Black Temple\nswp: enable/disable Sunwell Plateau")
+		DEFAULT_CHAT_FRAME:AddMessage("MHLootSwitcher: Parameters for /mhl are: \ndebug: enter/exit debug mode \nenable: enable/disable the loot changing \nkara: enable/disable Karazhan\nmag: enable/disable Magtheridon's Lair\ngruul: enable/disable Gruul's Lair\nssc: enable/disable Serpentshrine Cavern\ntk: enable/disable Tempest Keep\nmh: enable/disable Mount Hyjal \nbt: enable/disable Black Temple\nswp: enable/disable Sunwell Plateau")
     end
     return
 end
@@ -206,9 +184,3 @@ frame:RegisterEvent('VARIABLES_LOADED')
 -- Setting up Slash Commands
 SlashCmdList["MHLOOTSWITCHER"] = slashCmdHandler;
 SLASH_MHLOOTSWITCHER1 = "/mhl";
---[[SlashCmdList["MHLOOTSWITCHER"] = debug;
-SlashCmdList["MHLOOTSWITCHER_MLCHANGE"] = setML;
-SlashCmdList["MHLOOTSWITCHER_ENABLE"] = enable;
-SLASH_MHLOOTSWITCHER1 = "/mhldebug";
-SLASH_MHLOOTSWITCHER_MLCHANGE1 = "/mhlsetml";
-SLASH_MHLOOTSWITCHER_ENABLE1 = "/mhlenable";]]--
